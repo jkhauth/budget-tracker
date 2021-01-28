@@ -35,7 +35,6 @@ function populateTable() {
       <td>${transaction.name}</td>
       <td>${transaction.value}</td>
     `;
-
     tbody.appendChild(tr);
   });
 }
@@ -136,6 +135,13 @@ function sendTransaction(isAdding) {
   })
   .catch(err => {
     // fetch failed, so save in indexed db
+    
+    function saveRecord(record) {
+      const transaction = db.transaction(["pending"], "readwrite");
+      const store = transaction.objectStore("pending");
+      store.add(record);
+    }
+
     saveRecord(transaction);
 
     // clear form
